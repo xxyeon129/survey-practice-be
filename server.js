@@ -7,7 +7,7 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
 dotenv.config();
-const { EMAIL_SERVICE, AUTH_EMAIL, AUTH_PASSWORD } = process.env;
+const { EMAIL_SERVICE, AUTH_EMAIL, AUTH_PASSWORD, SERVER_URL } = process.env;
 
 const app = express();
 const port = 4444;
@@ -45,6 +45,11 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
   // Email 전송
   const transporter = nodemailer.createTransport({
+    host: SERVER_URL,
+    port: 4444,
+    secure: false,
+    logger: true,
+    ignoreTLS: true,
     service: EMAIL_SERVICE,
     auth: {
       user: AUTH_EMAIL,
