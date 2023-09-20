@@ -33,6 +33,11 @@ const storage = diskStorage({
 
 const upload = multer({ storage });
 
+// TEST CODE
+app.get('/', (req, res) => {
+  res.send('서버 가동 중~~~');
+});
+
 // POST API
 app.post('/upload', upload.single('file'), (req, res) => {
   const uploadFile = req.file;
