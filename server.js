@@ -7,7 +7,7 @@ import nodemailer from 'nodemailer';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
-const { EMAIL_SERVICE, AUTH_EMAIL, AUTH_PASSWORD, SERVER_URL } = process.env;
+const { EMAIL_SERVICE, AUTH_EMAIL, AUTH_PASSWORD, SERVER_URL, AUTH_TO_EMAIL } = process.env;
 
 const app = express();
 const port = 4444;
@@ -48,8 +48,6 @@ app.post('/upload', upload.single('file'), (req, res) => {
     host: 'smtp.gmail.com',
     port: 465,
     secure: true,
-    // logger: true,
-    // ignoreTLS: true,
     // service: EMAIL_SERVICE,
     auth: {
       user: AUTH_EMAIL,
@@ -59,7 +57,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
   const mailOptions = {
     from: AUTH_EMAIL,
-    to: AUTH_EMAIL,
+    to: AUTH_TO_EMAIL,
     subject: 'Nodemailer SendAttachment Test',
     text: '노드메일러를 이용해 보낸 메일의 내용입니다.',
     attachments: [
@@ -87,7 +85,5 @@ app.post('/upload', upload.single('file'), (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`~~서버가 http://localhost:${port} 에서 실행 중~~`);
-  console.log('email => ', AUTH_EMAIL);
-  console.log('pass => ', AUTH_PASSWORD);
+  console.log(`~~서버가 ${port} 포트에서 실행 중~~`);
 });
