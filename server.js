@@ -45,12 +45,12 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
   // Email 전송
   const transporter = nodemailer.createTransport({
-    host: SERVER_URL,
+    host: 'smtp.gmail.com',
     port: 465,
     secure: true,
     logger: true,
     ignoreTLS: true,
-    service: EMAIL_SERVICE,
+    // service: EMAIL_SERVICE,
     auth: {
       user: AUTH_EMAIL,
       pass: AUTH_PASSWORD,
