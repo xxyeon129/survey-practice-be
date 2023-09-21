@@ -46,7 +46,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
   // Email 전송
   const transporter = nodemailer.createTransport({
     host: SERVER_URL,
-    port: 4444,
+    port: 465,
     secure: true,
     logger: true,
     ignoreTLS: true,
