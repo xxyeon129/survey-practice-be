@@ -4,7 +4,7 @@ import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
 import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 
 dotenv.config();
 const { EMAIL_SERVICE, AUTH_EMAIL, AUTH_PASSWORD, SERVER_URL } = process.env;
