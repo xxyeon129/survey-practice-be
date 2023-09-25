@@ -58,7 +58,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
   const mailOptions = {
     from: AUTH_EMAIL,
     to: AUTH_TO_EMAIL,
-    subject: 'Nodemailer SendAttachment Test',
+    subject: '이상운동질환 비운동증상 전자설문 파일',
     text: '노드메일러를 이용해 보낸 메일의 내용입니다.',
     attachments: [
       {
@@ -72,7 +72,15 @@ app.post('/upload', upload.single('file'), (req, res) => {
     if (error) {
       console.log(error);
     } else {
-      console.log('Email snet : ', info);
+      console.log('Email sent : ', info);
+
+      // 임시 저장 파일 삭제
+      const filePath = uploadFile.path;
+
+      fs.unlink(filePath, (err) => {
+        if (err) console.error('파일 삭제 실패: ', err);
+        else console.log('파일 삭제 성공');
+      });
     }
   });
 
