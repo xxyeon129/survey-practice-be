@@ -7,7 +7,7 @@ import nodemailer from 'nodemailer';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
-const { EMAIL_SERVICE, AUTH_EMAIL, AUTH_PASSWORD, SERVER_URL, AUTH_TO_EMAIL } = process.env;
+const { AUTH_EMAIL, AUTH_PASSWORD, AUTH_TO_EMAIL } = process.env;
 
 const app = express();
 const port = 4444;
@@ -51,7 +51,6 @@ app.post('/upload', cors(corsOptions), upload.single('file'), (req, res) => {
     host: 'smtp.gmail.com',
     port: 465,
     secure: true,
-    // service: EMAIL_SERVICE,
     auth: {
       user: AUTH_EMAIL,
       pass: AUTH_PASSWORD,
