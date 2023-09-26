@@ -12,7 +12,10 @@ const { EMAIL_SERVICE, AUTH_EMAIL, AUTH_PASSWORD, SERVER_URL, AUTH_TO_EMAIL } = 
 const app = express();
 const port = 4444;
 
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  optionSuccessStatus: 200,
+};
 
 // 파일 저장 임시 디렉토리 설정
 const uploadDir = path.join(process.cwd(), 'uploads');
@@ -39,7 +42,7 @@ app.get('/', (req, res) => {
 });
 
 // POST API
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/upload', cors(corsOptions), upload.single('file'), (req, res) => {
   const uploadFile = req.file;
   console.log('업로드된 파일 정보 : ', uploadFile);
 
