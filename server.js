@@ -7,13 +7,13 @@ import nodemailer from 'nodemailer';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
-const { AUTH_EMAIL, AUTH_PASSWORD, AUTH_TO_EMAIL } = process.env;
+const { AUTH_EMAIL, AUTH_PASSWORD, AUTH_TO_EMAIL, CLIENT_URL } = process.env;
 
 const app = express();
 const port = 4444;
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: ['http://localhost:3000', CLIENT_URL],
   optionSuccessStatus: 200,
 };
 
