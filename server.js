@@ -42,57 +42,68 @@ app.get('/', (req, res) => {
 });
 
 // POST API
-app.post('/upload', cors(corsOptions), upload.single('file'), (req, res) => {
-  const uploadFile = req.file;
-  console.log('업로드된 파일 정보 : ', uploadFile);
+app.post(
+  '/upload',
+  cors(corsOptions),
+  upload.fields([{ name: 'file' }, { name: 'name' }, { name: 'birthday' }]),
+  (req, res) => {
+    const uploadFile = req.files['file'][0];
+    console.log('업로드된 파일 정보 : ', uploadFile);
+    const name = req.body['name'];
+    const birthday = req.body['birthday'];
+    const personalInfo = {
+      name,
+      birthday,
+    };
 
-  // Email 전송
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-      user: AUTH_EMAIL,
-      pass: AUTH_PASSWORD,
-    },
-  });
-
-  const mailOptions = {
-    from: AUTH_EMAIL,
-    to: AUTH_TO_EMAIL,
-    subject: '이상운동질환 비운동증상 전자설문 파일',
-    text: '노드메일러를 이용해 보낸 메일의 내용입니다.',
-    attachments: [
-      {
-        filename: 'express-test-1.csv',
-        path: `${uploadFile.destination}/${uploadFile.filename}`,
+    // Email 전송
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: AUTH_EMAIL,
+        pass: AUTH_PASSWORD,
       },
-    ],
-  };
+    });
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log('Email sent : ', info);
+    const mailOptions = {
+      from: AUTH_EMAIL,
+      to: AUTH_TO_EMAIL,
+      subject: `[이상운동질환 비운동증상 전자설문 임시저장 Excel 파일] ${personalInfo.name}환자`,
+      text: `생년월일 ${personalInfo.birthday}, ${personalInfo.name} 환자의 이상운동질환 비운동증상 전자설문 임시저장 Excel 파일입니다.`,
+      attachments: [
+        {
+          filename: `이상운동질환 비운동증상 전자설문_${personalInfo.name}_${personalInfo.birthday}.xlsx`,
+          path: `${uploadFile.destination}/${uploadFile.filename}`,
+        },
+      ],
+    };
 
-      // 임시 저장 파일 삭제
-      const filePath = uploadFile.path;
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent : ', info);
 
-      fs.unlink(filePath, (err) => {
-        if (err) console.error('파일 삭제 실패: ', err);
-        else console.log('파일 삭제 성공');
-      });
+        // 임시 저장 파일 삭제
+        const filePath = uploadFile.path;
+
+        fs.unlink(filePath, (err) => {
+          if (err) console.error('파일 삭제 실패: ', err);
+          else console.log('파일 삭제 성공');
+        });
+      }
+    });
+
+    res.status(200).send('파일 업로드 완료!');
+
+    if (!uploadFile) {
+      res.status(400).send('파일이 없음 오류');
+      return;
     }
-  });
-
-  res.status(200).send('파일 업로드 완료!');
-
-  if (!uploadFile) {
-    res.status(400).send('파일이 없음 오류');
-    return;
   }
-});
+);
 
 app.listen(port, () => {
   console.log(`~~서버가 ${port} 포트에서 실행 중~~`);
