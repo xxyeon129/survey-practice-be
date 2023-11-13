@@ -7,7 +7,7 @@ import nodemailer from 'nodemailer';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
-const { AUTH_EMAIL, AUTH_PASSWORD, AUTH_TO_EMAIL, CLIENT_URL } = process.env;
+const { AUTH_EMAIL, AUTH_PASSWORD, AUTH_TO_EMAIL, AUTH_TO_EMAIL_2, CLIENT_URL } = process.env;
 
 const app = express();
 const port = 4444;
@@ -81,6 +81,36 @@ app.post(
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent : ', info);
+
+        // 임시 저장 파일 삭제
+        // const filePath = uploadFile.path;
+
+        // fs.unlink(filePath, (err) => {
+        //   if (err) console.error('파일 삭제 실패: ', err);
+        //   else console.log('파일 삭제 성공');
+        // });
+      }
+    });
+
+    const mailOptions2 = {
+      from: AUTH_EMAIL,
+      to: AUTH_TO_EMAIL_2,
+      subject: `[이상운동질환 비운동증상 전자설문 임시저장 Excel 파일] ${personalInfo.name}환자`,
+      text: `생년월일 ${personalInfo.birthday}, ${personalInfo.name} 환자의 이상운동질환 비운동증상 전자설문 임시저장 Excel 파일입니다.`,
+      attachments: [
+        {
+          filename: `이상운동질환 비운동증상 전자설문_${personalInfo.name}_${personalInfo.birthday}.xlsx`,
+          path: `${uploadFile.destination}/${uploadFile.filename}`,
+        },
+      ],
+    };
+
+    // send mail 2
+    transporter.sendMail(mailOptions2, (error, info) => {
       if (error) {
         console.log(error);
       } else {
