@@ -56,6 +56,12 @@ app.post(
       birthday,
     };
 
+    // Date - 파일명에 추가
+    const rawDate = new Date().toISOString();
+    const fileRawDate = rawDate.slice(0, 10);
+    const fileRawTime = rawDate.slice(10, 19).replace(/:/g, '-');
+    const fileDate = `${fileRawDate}${fileRawTime}`;
+
     // Email 전송
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -74,7 +80,7 @@ app.post(
       text: `생년월일 ${personalInfo.birthday}, ${personalInfo.name} 환자의 이상운동질환 비운동증상 전자설문 임시저장 Excel 파일입니다.`,
       attachments: [
         {
-          filename: `이상운동질환 비운동증상 전자설문_${personalInfo.name}_${personalInfo.birthday}.xlsx`,
+          filename: `이상운동질환 비운동증상 전자설문_${personalInfo.birthday}${personalInfo.name}_${fileDate}.xlsx`,
           path: `${uploadFile.destination}/${uploadFile.filename}`,
         },
       ],
@@ -85,14 +91,6 @@ app.post(
         console.log(error);
       } else {
         console.log('Email sent : ', info);
-
-        // 임시 저장 파일 삭제
-        // const filePath = uploadFile.path;
-
-        // fs.unlink(filePath, (err) => {
-        //   if (err) console.error('파일 삭제 실패: ', err);
-        //   else console.log('파일 삭제 성공');
-        // });
       }
     });
 
@@ -103,7 +101,7 @@ app.post(
       text: `생년월일 ${personalInfo.birthday}, ${personalInfo.name} 환자의 이상운동질환 비운동증상 전자설문 임시저장 Excel 파일입니다.`,
       attachments: [
         {
-          filename: `이상운동질환 비운동증상 전자설문_${personalInfo.name}_${personalInfo.birthday}.xlsx`,
+          filename: `이상운동질환 비운동증상 전자설문_${personalInfo.birthday}${personalInfo.name}_${fileDate}.xlsx`,
           path: `${uploadFile.destination}/${uploadFile.filename}`,
         },
       ],
